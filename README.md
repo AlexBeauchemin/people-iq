@@ -1,1 +1,1 @@
-# peopleiq
+## People IQ

@@ -1,0 +1,18 @@
+@import "../../node_modules/purecss/build/base.css";
+@import "../../node_modules/purecss/build/grids.css";
+@import "../../node_modules/purecss/build/grids-responsive.css";
+@import "base/vars.css";
+@import "base/helpers.css";
+
+/* Global setup */
+@import "base/global.css";
+
+/* Vendors */
+@import "vendor/purecss-extend.css";
+
+/* Layout */
+@import "layout/footer.css";
+@import "layout/header.css";
+
+/* Pages */
+@import "pages/home.css";

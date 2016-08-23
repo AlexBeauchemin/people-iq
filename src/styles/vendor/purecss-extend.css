@@ -1,0 +1,17 @@
+.pure-g.pure-g--gutter {
+  margin: 0 -1rem;
+
+  div[class*="pure-u-"] {
+    padding: 0 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pure-g.pure-g--gutter {
+    margin: 0 -2rem;
+
+    div[class*="pure-u-"] {
+      padding: 0 2rem;
+    }
+  }
+}
