@@ -24,13 +24,16 @@ const muiTheme = getMuiTheme(
   { userAgent }
 );
 
-initAuth0();
+const init = () => {
+  initAuth0();
+};
 
 const App = ({ children }) => {
   return (
     <MuiThemeProvider muiTheme={muiTheme}>
       <div className="wrapper sticky-footer">
         {children}
+        <a href="#" onClick={init}>Login</a>
       </div>
     </MuiThemeProvider>
   );
