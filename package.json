@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rollup -c",
     "serve": "node server.js",
-    "start": "concurrently --kill-others 'npm run rollup' 'npm run start-browsersync'",
+    "start": "concurrently --kill-others 'npm run rollup' 'npm run browsersync'",
     "browsersync": "browser-sync start --config browsersync.config.js",
     "rollup": "rollup -c -w"
   },
@@ -43,6 +43,8 @@
     "concurrently": "^2.2.0",
     "eslint": "^2.11.1",
     "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.14.0",
+    "eslint-plugin-jsx-a11y": "^2.1.0",
     "eslint-plugin-react": "^5.1.1",
     "postcss": "^5.0.21",
     "postcss-color-function": "^2.0.1",

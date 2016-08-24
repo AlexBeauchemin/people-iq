@@ -21,14 +21,24 @@ export default {
   // format: 'cjs',
   sourceMap: true,
   plugins: [
-    // eslint({}),
+    eslint({
+      configFile: '.eslint.json',
+      exclude: 'node_modules/**'
+    }),
     resolve({
       browser: true,
       main: true,
       jsnext: true
     }),
     babel({
-      exclude: 'node_modules/**'
+      babelrc: false,
+      exclude: 'node_modules/**',
+      plugins: ['external-helpers'],
+      presets: [
+        ['es2015', { modules: false }],
+        'stage-2',
+        'react'
+      ]
     }),
     cjs({
       exclude: [
