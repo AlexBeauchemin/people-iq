@@ -2,6 +2,7 @@ import React from 'react';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { blueA400, blueA700, lightGreenA400, lightGreenA700 } from 'material-ui/styles/colors';
+import initAuth0 from '../libs/auth0.js';
 
 const userAgent = typeof navigator === 'undefined' ? 'all' : navigator.userAgent;
 
@@ -22,6 +23,8 @@ const muiTheme = getMuiTheme(
   },
   { userAgent }
 );
+
+initAuth0();
 
 const App = ({ children }) => {
   return (

@@ -3,6 +3,7 @@ import cjs from 'rollup-plugin-commonjs';
 import globals from 'rollup-plugin-node-globals';
 import replace from 'rollup-plugin-replace';
 import resolve from 'rollup-plugin-node-resolve';
+import builtins from 'rollup-plugin-node-builtins';
 
 import eslint from 'rollup-plugin-eslint';
 import uglify from 'rollup-plugin-uglify';
@@ -21,6 +22,7 @@ export default {
   // format: 'cjs',
   sourceMap: true,
   plugins: [
+    builtins(),
     eslint({
       configFile: '.eslint.json',
       exclude: 'node_modules/**'
@@ -43,7 +45,8 @@ export default {
     cjs({
       exclude: [
         'node_modules/process-es6/**',
-        'node_modules/rollup-plugin-node-globals/**'
+        'node_modules/rollup-plugin-node-globals/**',
+        'node_modules/rollup-plugin-node-builtins/**'
       ],
       // include: [
       //   'node_modules/react/**',
@@ -57,9 +60,9 @@ export default {
       //   'node_modules/redux-thunk/**',
       //   'node_modules/redux/**'
       // ],
-      namedExports : {
-        'node_modules/react/react.js' : ['Component', 'PropTypes', 'createElement'],
-        'node_modules/react-dom/index.js' : ['render']
+      namedExports: {
+        'node_modules/react/react.js': ['Component', 'PropTypes', 'createElement'],
+        'node_modules/react-dom/index.js': ['render']
       }
     }),
     globals(),

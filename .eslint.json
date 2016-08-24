@@ -5,7 +5,7 @@
     "es6": true
   },
   "globals": {},
-//  "parser": "babel-eslint",
+  // "parser": "babel-eslint",
   "plugins": ["react"],
   "rules": {
     "arrow-body-style": 0,
