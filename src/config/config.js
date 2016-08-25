@@ -1,6 +1,6 @@
 export default {
   auth0: {
-    clientID: 'alexbeauchemin.auth0.com',
-    domain: 'gxiPEUc5P4YIMFakEGorqSXheDHOGASZ'
+    clientID: 'gxiPEUc5P4YIMFakEGorqSXheDHOGASZ',
+    domain: 'alexbeauchemin.auth0.com'
   }
 };
