@@ -5,7 +5,7 @@
     "es6": true
   },
   "globals": {
-    "Auth0Lock": true
+    "Auth0LockPasswordless": true
   },
   // "parser": "babel-eslint",
   "plugins": ["react"],

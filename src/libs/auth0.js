@@ -1,36 +1,20 @@
-// import Auth0Lock from 'auth0-lock';
+// import Auth0LockPasswordless from 'auth0-lock-passwordless';
 import Auth0 from 'auth0-js';
 import config from '../config/config.js';
 
 const { clientID, domain } = config.auth0;
-const options = {
-  auth: {
-    redirect: false
-  }
-};
 let lock = null;
 let auth0 = null;
 
-function getProfile(authResult) {
-  console.log('get profile', authResult);
-  lock.getProfile(authResult.idToken, (error, profile) => {
-    if (error) return;
-
-    localStorage.setItem('idToken', authResult.idToken);
-    localStorage.setItem('profile', JSON.stringify(profile));
-  });
-}
-
 export function initLock() {
-  lock = new Auth0Lock(clientID, domain, options);
-  lock.on('authenticated', getProfile);
+  lock = new Auth0LockPasswordless(clientID, domain);
 }
 
 export function showLock() {
-  if (lock) lock.show();
+  if (lock) lock.magiclink();
   else {
     initLock();
-    lock.show();
+    lock.magiclink();
   }
 }
 
