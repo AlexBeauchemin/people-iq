@@ -4,7 +4,9 @@
     "browser": true,
     "es6": true
   },
-  "globals": {},
+  "globals": {
+    "Auth0Lock": true
+  },
   // "parser": "babel-eslint",
   "plugins": ["react"],
   "rules": {

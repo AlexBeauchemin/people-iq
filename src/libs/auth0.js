@@ -1,4 +1,4 @@
-// import Auth0Lock from 'auth0-lock';
+import Auth0Lock from 'auth0-lock';
 import Auth0 from 'auth0-js';
 import config from '../config/config.js';
 
@@ -24,6 +24,14 @@ function getProfile(authResult) {
 export function initLock() {
   lock = new Auth0Lock(clientID, domain, options);
   lock.on('authenticated', getProfile);
+}
+
+export function showLock() {
+  if (lock) lock.show();
+  else {
+    initLock();
+    lock.show();
+  }
 }
 
 export function init() {
