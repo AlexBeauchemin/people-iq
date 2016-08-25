@@ -15,6 +15,7 @@
     "npm": "^3.8.9"
   },
   "dependencies": {
+    "auth0-js": "^7.1.0",
     "auth0-lock": "^10.2.1",
     "aws-sdk": "^2.4.9",
     "babel-polyfill": "^6.9.1",

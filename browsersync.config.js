@@ -3,6 +3,7 @@ module.exports = {
     'index.html',
     'dist'
   ],
+  https: true,
   server: './',
   port: 3000,
   open: false,
