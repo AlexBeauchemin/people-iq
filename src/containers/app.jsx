@@ -6,10 +6,6 @@ import { getUserProfile, initLock, showLock } from '../libs/auth0.js';
 import { login } from '../libs/scaphold.js';
 
 const userAgent = typeof navigator === 'undefined' ? 'all' : navigator.userAgent;
-
-// This replaces the textColor value on the palette
-// and then update the keys for each component that depends on it.
-// More on Colors: http://www.material-ui.com/#/customization/colors
 const muiTheme = getMuiTheme(
   {
     palette: {
