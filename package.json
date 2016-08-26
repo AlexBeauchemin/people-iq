@@ -8,7 +8,7 @@
     "serve": "node server.js",
     "start": "concurrently --kill-others 'npm run rollup' 'npm run browsersync'",
     "browsersync": "browser-sync start --config browsersync.config.js",
-    "rollup": "rollup -c -w"
+    "rollup": "rimraf dist;rollup -c -w"
   },
   "engines": {
     "node": "^6.2.0",
@@ -56,6 +56,7 @@
     "postcss-import": "8.0.2",
     "postcss-loader": "^0.9.1",
     "precss": "^1.4.0",
+    "rimraf": "^2.5.4",
     "rollup": "^0.34.10",
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-commonjs": "^3.3.1",
