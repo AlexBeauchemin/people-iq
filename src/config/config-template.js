@@ -3,5 +3,8 @@ export default {
   auth0: {
     clientID: '',
     domain: ''
+  },
+  scaphold: {
+    url: ''
   }
 };

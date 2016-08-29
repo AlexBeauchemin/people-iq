@@ -24,7 +24,10 @@ const muiTheme = getMuiTheme(
 initLock();
 getUserProfile()
   .then(login)
-  .catch(console.error);
+  .catch((msg, error) => {
+    console.error(msg, error);
+    showLock();
+  });
 
 const App = ({ children }) => {
   return (

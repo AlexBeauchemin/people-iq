@@ -25,17 +25,18 @@ export function getUserProfile() {
   return new Promise((resolve, reject) => {
     function getProfile(token) {
       lock.getProfile(token, (err, profile) => {
-        if (err) return reject('error', err);
+        if (err) return reject(err);
         resolve(profile);
       });
     }
 
     if (hash && hash.error) return reject(hash.error_description, hash.error);
-    if (idToken) return getProfile(idToken);
     if (hash && hash.id_token) {
       localStorage.setItem('token', hash.id_token);
       getProfile(hash.id_token);
     }
+    if (idToken) return getProfile(idToken);
+    reject('cannot retrieve user token');
   });
 }
 
