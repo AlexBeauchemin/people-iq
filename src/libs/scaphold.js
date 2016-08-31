@@ -3,8 +3,7 @@ import config from '../config/config.js';
 
 let userProfile = null;
 
-function getUser(identity, token) {
-  console.log(JSON.stringify({ data: { identity, token }}));
+function getAuth(identity, token) {
   const data = {
     query: 'mutation Login($data:_LoginUserWithAuth0LockInput!) { loginUserWithAuth0Lock(input: $data) { id_token user { id username credentials } } }',
     variables: JSON.stringify({
@@ -31,26 +30,23 @@ function getUser(identity, token) {
   });
 }
 
-function getProfile(identity) {
-  const userId = get(identity, 'data.loginUserWithAuth0Lock.user.id');
+function getUser(identity) {
+  const id = get(identity, 'data.loginUserWithAuth0Lock.user.id');
   const data = {
-    query: `{ 
-      getUser(id: "${userId}") {
+    query: `{
+      getUser(id: "${id}") {
         id,
         username,
         roles {
           role,
           isAdmin
-        },
-        profile {
-          id
         }
       }
     }`
   };
 
   return new Promise((resolve, reject) => {
-    if (!identity || !userId) reject('Cannot retrieve user identity');
+    if (!identity || !id) reject('Cannot retrieve user identity');
 
     const options = {
       body: JSON.stringify(data),
@@ -68,28 +64,26 @@ function getProfile(identity) {
 }
 
 function createProfile(user) {
-  const id = get(user, 'data.getUser.id');
+  const userId = get(user, 'data.getUser.id');
   const { email, picture, nickname } = userProfile;
   let name = userProfile.name;
 
   if (name === email) name = nickname;
 
   const data = {
-    query: 'mutation CreateProfile($profile:_CreateProfileInput!) { createProfile(input: $profile) { changedProfile { name, location, picture, title, user { id } } } }',
+    query: 'mutation CreateProfile($profile:_CreateProfileInput!) { createProfile(input: $profile) { changedProfile { name, location, picture, title, userId, user { id, username } } } }',
     variables: JSON.stringify({
       profile: {
         name,
         location: 'Montreal',
         picture,
-        user: {
-          id
-        }
+        userId
       }
     })
   };
 
   return new Promise((resolve, reject) => {
-    if (!id) reject('Cannot retrieve user id');
+    if (!userId) reject('Cannot retrieve user');
 
     const options = {
       body: JSON.stringify(data),
@@ -112,8 +106,8 @@ export function login(profile) {
 
   userProfile = profile;
   
-  getUser(identity, token)
-    .then(getProfile)
+  getAuth(identity, token)
+    .then(getUser)
     .then(createProfile)
     .catch(console.error);
 }
