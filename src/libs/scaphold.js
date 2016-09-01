@@ -2,6 +2,17 @@ import get from 'lodash/get';
 import config from '../config/config.js';
 
 let userProfile = null;
+let userId = '';
+
+function storeToken(identity) {
+  const token = get(identity, 'data.loginUserWithAuth0Lock.id_token');
+  localStorage.setItem('token', token);
+  return identity;
+}
+
+function storeProfile(profile) {
+  sessionStorage.setItem('profile', profile);
+}
 
 function getAuth(identity, token) {
   const data = {
@@ -25,25 +36,30 @@ function getAuth(identity, token) {
 
     fetch(config.scaphold.url, options)
       .then(response => { return response.json(); })
+      .then(storeToken)
       .then(resolve)
       .catch(reject);
   });
 }
 
-function getUser(identity) {
+function getProfile(identity) {
   const id = get(identity, 'data.loginUserWithAuth0Lock.user.id');
   const data = {
     query: `{
       getUser(id: "${id}") {
         id,
-        username,
-        roles {
-          role,
-          isAdmin
+        profile {        
+          id,
+          name,
+          email,
+          picture,
+          userId
         }
       }
     }`
   };
+
+  userId = id;
 
   return new Promise((resolve, reject) => {
     if (!identity || !id) reject('Cannot retrieve user identity');
@@ -63,22 +79,26 @@ function getUser(identity) {
   });
 }
 
-function createProfile(user) {
-  const userId = get(user, 'data.getUser.id');
+function createProfile(profileObject) {
+  const profile = get(profileObject.data.getProfile);
   const { email, picture, nickname } = userProfile;
-  let name = userProfile.name;
+  const newProfile = {
+    email,
+    location: 'Montreal',
+    name: userProfile.name,
+    picture,
+    userId
+  };
 
-  if (name === email) name = nickname;
+  if (profile) return storeProfile(profile);
+  if (newProfile.name === email) newProfile.name = nickname;
+
+  storeProfile(newProfile);
 
   const data = {
-    query: 'mutation CreateProfile($profile:_CreateProfileInput!) { createProfile(input: $profile) { changedProfile { name, location, picture, title, userId, user { id, username } } } }',
+    query: 'mutation CreateProfile($profile:_CreateProfileInput!) { createProfile(input: $profile) { changedProfile { email, location, name, picture, title, userId, user { id, username } } } }',
     variables: JSON.stringify({
-      profile: {
-        name,
-        location: 'Montreal',
-        picture,
-        userId
-      }
+      profile: newProfile
     })
   };
 
@@ -88,6 +108,7 @@ function createProfile(user) {
     const options = {
       body: JSON.stringify(data),
       headers: new Headers({
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json'
       }),
       method: 'post'
@@ -107,7 +128,7 @@ export function login(profile) {
   userProfile = profile;
   
   getAuth(identity, token)
-    .then(getUser)
+    .then(getProfile)
     .then(createProfile)
     .catch(console.error);
 }
