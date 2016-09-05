@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { blueA400, blueA700, lightGreenA400, lightGreenA700 } from 'material-ui/styles/colors';
 import { getUserProfile, initLock, showLock } from '../libs/auth0.js';
 import { login } from '../libs/scaphold.js';
+import Header from '../components/layout/header.jsx';
 
 const userAgent = typeof navigator === 'undefined' ? 'all' : navigator.userAgent;
 const muiTheme = getMuiTheme(
@@ -21,27 +22,39 @@ const muiTheme = getMuiTheme(
   { userAgent }
 );
 
-initLock();
-getUserProfile()
-  .then(login)
-  .catch((msg, error) => {
-    console.error(msg, error);
-    showLock();
-  });
+class App extends Component {
+  constructor(props) {
+    super(props);
 
-const App = ({ children }) => {
-  return (
-    <MuiThemeProvider muiTheme={muiTheme}>
-      <div className="wrapper sticky-footer">
-        {children}
-        <p><a href="#" onClick={showLock}>Login with lock</a></p>
-      </div>
-    </MuiThemeProvider>
-  );
-};
+    this.state = {
+      user: null,
+      profile: null
+    };
+  }
 
-App.propTypes = {
-  children: React.PropTypes.element
-};
+  componentWillMount() {
+    initLock();
+    getUserProfile()
+      .then(login)
+      .then(user => this.setState({ user }))
+      .catch((msg, error) => {
+        console.error(msg, error);
+        showLock();
+      });
+  }
+
+  render() {
+    return (
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <Header user={this.state.user} profile={this.state.profile} />
+        <main>
+          <p>Hello</p>
+        </main>
+      </MuiThemeProvider>
+    );
+  }
+}
+
+App.propTypes = {};
 
 export default App;

@@ -1,4 +1,4 @@
-// import Auth0LockPasswordless from 'auth0-lock-passwordless';
+import Auth0LockPasswordless from 'auth0-lock-passwordless';
 import config from '../config/config.js';
 
 const { clientID, domain } = config.auth0;

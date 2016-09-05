@@ -4,10 +4,8 @@
     "browser": true,
     "es6": true
   },
-  "globals": {
-    "Auth0LockPasswordless": true
-  },
-  // "parser": "babel-eslint",
+  "globals": {},
+  "parser": "babel-eslint",
   "plugins": ["react"],
   "rules": {
     "arrow-body-style": 0,
