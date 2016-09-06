@@ -1,7 +1,23 @@
 import get from 'lodash/get';
+import map from 'lodash/map';
 import config from '../config/config.js';
 
 let authProfile = null;
+
+function cleanUpProfilesObject(profiles) {
+  const results = get(profiles, 'data.viewer.allProfiles.edges') || [];
+  return map(results, result => result.node);
+}
+
+function cleanUpUserObject(user) {
+  const data = get(user, 'data.loginUserWithAuth0Lock') || {};
+  return {
+    raw: user,
+    token: data.id_token,
+    id: get(data, 'user.id'),
+    username: get(data, 'user.username')
+  };
+}
 
 function storeToken(identity) {
   const token = get(identity, 'data.loginUserWithAuth0Lock.id_token');
@@ -32,6 +48,7 @@ function getAuth(identity, token) {
     fetch(config.scaphold.url, options)
       .then(response => { return response.json(); })
       .then(storeToken)
+      .then(cleanUpUserObject)
       .then(resolve)
       .catch(reject);
   });
@@ -119,6 +136,7 @@ export function getProfiles() {
 
     fetch(config.scaphold.url, options)
       .then(response => { return response.json(); })
+      .then(cleanUpProfilesObject)
       .then(resolve)
       .catch(reject);
   });

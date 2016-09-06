@@ -6,6 +6,10 @@ import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import { showLock } from '../../libs/auth0.js';
 
+function logout() {
+
+}
+
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -30,13 +34,13 @@ class Header extends Component {
   };
 
   render() {
-    const { user = {} } = this.props;
-    const isLogged = !!user.id;
+    const { profile, user } = this.props;
+    const isLogged = !!user;
     let menu;
     
-    console.log(user,profile);
-
-    if (isLogged) {
+    console.log(user, profile);
+    
+    if (isLogged && profile) {
       menu = (
         <div>
           <FlatButton label={user.displayName || user.email} onTouchTap={this.openPopOver} />

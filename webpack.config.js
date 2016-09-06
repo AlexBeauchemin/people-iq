@@ -2,10 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 
 const ENV = process.env.NODE_ENV || 'production';
-const DEBUG = ENV === 'test';
+const DEBUG = ENV === 'dev';
 
 const config = {
-  devtool: DEBUG ? 'cheap-module-eval-source-map' : false,
+  devtool: DEBUG ? 'eval-source-map' : false,
   entry: [
     './src/app',
     'webpack-dev-server/client?http://localhost:3001',

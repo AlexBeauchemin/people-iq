@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import find from 'lodash/find';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { blueA400, blueA700, lightGreenA400, lightGreenA700 } from 'material-ui/styles/colors';
 import { getUserProfile, initLock, showLock } from '../libs/auth0.js';
-import { login } from '../libs/scaphold.js';
+import { getProfiles, login } from '../libs/scaphold.js';
 import Header from '../components/layout/header.jsx';
 
 const userAgent = typeof navigator === 'undefined' ? 'all' : navigator.userAgent;
@@ -28,7 +29,7 @@ class App extends Component {
 
     this.state = {
       user: null,
-      profile: null
+      profiles: null
     };
   }
 
@@ -37,19 +38,27 @@ class App extends Component {
     getUserProfile()
       .then(login)
       .then(user => this.setState({ user }))
+      .then(getProfiles)
+      .then(profiles => this.setState({ profiles }))
       .catch((msg, error) => {
-        console.error(msg, error);
+        if (msg || error) console.error(msg, error);
         showLock();
       });
   }
 
   render() {
+    const { user, profiles } = this.state;
+    const userId = user ? user.id : null;
+    let profile = find(profiles, p => p.id === userId);
+
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <Header user={this.state.user} profile={this.state.profile} />
-        <main>
-          <p>Hello</p>
-        </main>
+        <div>
+          <Header user={user} profile={profile} />
+          <main>
+            <p>Hello</p>
+          </main>
+        </div>
       </MuiThemeProvider>
     );
   }
