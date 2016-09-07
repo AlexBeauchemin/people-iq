@@ -1,13 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import FlatButton from 'material-ui/FlatButton';
-import Avatar from 'material-ui/Avatar';
-import Popover from 'material-ui/Popover';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
 import { showLock } from '../../libs/auth0.js';
 
-function logout() {
+const styles = {
+  img: {
+    height: '60px'
+  }
+};
 
+function logout() {
+  localStorage.clear();
+  location.reload();
 }
 
 class Header extends Component {
@@ -34,49 +37,32 @@ class Header extends Component {
   };
 
   render() {
-    const { profile, user } = this.props;
+    const { user } = this.props;
     const isLogged = !!user;
     let menu;
-    
-    console.log(user, profile);
-    
-    if (isLogged && profile) {
+
+    if (isLogged) {
       menu = (
         <div>
-          <FlatButton label={user.displayName || user.email} onTouchTap={this.openPopOver} />
-          <Avatar src={user.photoURL} size={35} style={{ verticalAlign: 'middle' }} hidden={!user.photoURL} />
-          <Popover
-            anchorEl={this.state.anchorEl}
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            onRequestClose={this.closePopOver}
-            open={this.state.open}
-            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-          >
-            <Menu>
-              <MenuItem onClick={logout} primaryText="Logout" />
-            </Menu>
-          </Popover>
-
+          <FlatButton label="Logout" onClick={logout} />
         </div>
       );
     } else {
       menu = (
         <div>
-          <a href="#" onClick={showLock}>Login with lock</a>
+          <FlatButton label="Login" onClick={showLock} />
         </div>
       );
     }
 
     return (
-      <header>
-        <div className="container">
-          <div className="pure-g">
-            <div className="pure-u-1-2">
-              <img src="http://www.american.edu/uploads/profiles/large/chris_palmer_profile_11.jpg" alt="PeopleIQ" className="logo" />
-            </div>
-            <div className="pure-u-1-2 text-right">
-              {menu}
-            </div>
+      <header className="container">
+        <div className="pure-g">
+          <div className="pure-u-1-2">
+            <img src="http://sweetiq.com/wp-content/themes/sweetiq/img/logos/SWIQ_Logo_Open_Grey.png" alt="PeopleIQ" style={styles.img} />
+          </div>
+          <div className="pure-u-1-2 text-right">
+            {menu}
           </div>
         </div>
       </header>

@@ -1,5 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
+const precss = require('precss');
+const postcssImport = require('postcss-import');
+const cssnext = require('postcss-cssnext');
+const cssCustomMedia = require('postcss-custom-media');
+const colorFunction = require('postcss-color-function');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const ENV = process.env.NODE_ENV || 'production';
 const DEBUG = ENV === 'dev';
@@ -33,10 +39,26 @@ const config = {
         include: __dirname
       },
       {
+        test: /\.css$/,
+        include: [path.join(__dirname, '/src/styles')],
+        loaders: ['style', 'css', 'postcss']
+      },
+      {
         test: /\.json$/,
         loader: 'json'
       }
     ]
+  },
+  postcss(wp) {
+    return [
+      postcssImport({
+        addDependencyTo: wp
+      }),
+      cssCustomMedia,
+      precss,
+      cssnext,
+      colorFunction
+    ];
   }
 };
 
@@ -48,6 +70,7 @@ if (DEBUG) {
 } else {
   config.entry = ['./src/app'];
   config.plugins = config.plugins.concat([
+    new ExtractTextPlugin('main.css'),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false
@@ -60,6 +83,10 @@ if (DEBUG) {
   ]);
 
   config.module.loaders[0].loaders = ['babel'];
+  config.module.loaders[1] = {
+    test: /\.css$/,
+    loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader')
+  };
 }
 
 module.exports = config;

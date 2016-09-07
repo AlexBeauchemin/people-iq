@@ -6,6 +6,8 @@ import { blueA400, blueA700, lightGreenA400, lightGreenA700 } from 'material-ui/
 import { getUserProfile, initLock, showLock } from '../libs/auth0.js';
 import { getProfiles, login } from '../libs/scaphold.js';
 import Header from '../components/layout/header.jsx';
+import ProgressBar from '../components/shared/progress-bar.jsx';
+import CardsList from '../components/cards-list.jsx';
 
 const userAgent = typeof navigator === 'undefined' ? 'all' : navigator.userAgent;
 const muiTheme = getMuiTheme(
@@ -49,14 +51,15 @@ class App extends Component {
   render() {
     const { user, profiles } = this.state;
     const userId = user ? user.id : null;
-    let profile = find(profiles, p => p.id === userId);
+    let userProfile = find(profiles, p => p.id === userId);
 
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
-          <Header user={user} profile={profile} />
-          <main>
-            <p>Hello</p>
+          <ProgressBar isLoading={!profiles} />
+          <Header user={user} profile={userProfile} />
+          <main className="container">
+            <CardsList profiles={profiles} />
           </main>
         </div>
       </MuiThemeProvider>

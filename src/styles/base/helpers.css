@@ -1,0 +1,17 @@
+.invisible { visibility: hidden; }
+.hidden { display: none; }
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.absolute-center {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.flex-container { display: flex; }
+.flex-fill { flex-grow: 1; }
+.flex { flex: 0 1 auto; }
