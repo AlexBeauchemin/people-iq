@@ -8,7 +8,7 @@ const ProfileCard = ({ profile }) => {
   if (description) elDescription = <p>{description}</p>;
 
   return (
-    <Card className="pure-u-1-8">
+    <Card className="pure-u-1-6">
       <CardMedia>
         <img src={picture} role="presentation" />
       </CardMedia>
