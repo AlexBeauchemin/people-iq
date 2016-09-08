@@ -1,5 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+import FontIcon from 'material-ui/FontIcon';
 import { showLock } from '../../libs/auth0.js';
 
 const styles = {
@@ -10,7 +13,7 @@ const styles = {
 
 function logout() {
   localStorage.clear();
-  location.reload();
+  document.location.href = '/';
 }
 
 class Header extends Component {
@@ -43,13 +46,13 @@ class Header extends Component {
 
     if (isLogged) {
       menu = (
-        <div>
+        <div style={{ display: 'inline-block' }}>
           <FlatButton label="Logout" onClick={logout} />
         </div>
       );
     } else {
       menu = (
-        <div>
+        <div style={{ display: 'inline-block' }}>
           <FlatButton label="Login" onClick={showLock} />
         </div>
       );
@@ -62,6 +65,8 @@ class Header extends Component {
             <img src="http://sweetiq.com/wp-content/themes/sweetiq/img/logos/SWIQ_Logo_Open_Grey.png" alt="PeopleIQ" style={styles.img} />
           </div>
           <div className="pure-u-1-2 text-right">
+            <FlatButton icon={<FontIcon className="fa fa-search" />} />
+            <TextField hintText="Search" />
             {menu}
           </div>
         </div>

@@ -66,7 +66,6 @@ export function createProfile(userId) {
 
   if (name === email) profile.name = nickname;
 
-
   const data = {
     query: 'mutation CreateProfile($profile:_CreateProfileInput!) { createProfile(input: $profile) { changedProfile { email, location, name, picture, title, userId, user { id, username } } } }',
     variables: JSON.stringify({ profile })

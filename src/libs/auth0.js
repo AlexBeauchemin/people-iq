@@ -33,7 +33,7 @@ export function getUserProfile() {
     if (hash && hash.error) return reject(hash.error_description, hash.error);
     if (hash && hash.id_token) {
       localStorage.setItem('token', hash.id_token);
-      getProfile(hash.id_token);
+      return getProfile(hash.id_token);
     }
     if (idToken) return getProfile(idToken);
     reject();

@@ -4,7 +4,7 @@ import Card from './card.jsx';
 
 const CardsList = ({ profiles }) => {
   return (
-    <div className="pure-g">
+    <div className="pure-g pure-g--gutter">
       {map(profiles, profile => <Card key={profile.id} profile={profile} />)}
     </div>
   );
