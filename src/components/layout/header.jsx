@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import FontIcon from 'material-ui/FontIcon';
 import { showLock } from '../../libs/auth0.js';
@@ -17,26 +16,12 @@ function logout() {
 }
 
 class Header extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false
-    };
-  }
-
-  openPopOver = (e) => {
-    e.preventDefault();
-
-    this.setState({
-      open: true,
-      anchorEl: e.currentTarget
-    });
+  goToEdit = () => {
+    this.props.changeView('edit');
   };
 
-  closePopOver = () => {
-    this.setState({
-      open: false
-    });
+  goToHome = () => {
+    this.props.changeView('list');
   };
 
   render() {
@@ -47,6 +32,7 @@ class Header extends Component {
     if (isLogged) {
       menu = (
         <div style={{ display: 'inline-block' }}>
+          <FlatButton label="Edit Profile" onClick={this.goToEdit} />
           <FlatButton label="Logout" onClick={logout} />
         </div>
       );
@@ -62,7 +48,9 @@ class Header extends Component {
       <header className="container">
         <div className="pure-g">
           <div className="pure-u-1-2">
-            <img src="http://sweetiq.com/wp-content/themes/sweetiq/img/logos/SWIQ_Logo_Open_Grey.png" alt="PeopleIQ" style={styles.img} />
+            <a href="#" onClick={this.goToHome}>
+              <img src="http://sweetiq.com/wp-content/themes/sweetiq/img/logos/SWIQ_Logo_Open_Grey.png" alt="PeopleIQ" style={styles.img} />
+            </a>
           </div>
           <div className="pure-u-1-2 text-right">
             <FlatButton icon={<FontIcon className="fa fa-search" />} />
@@ -76,6 +64,7 @@ class Header extends Component {
 }
 
 Header.propTypes = {
+  changeView: PropTypes.func.isRequired,
   profile: PropTypes.object,
   user: PropTypes.object
 };

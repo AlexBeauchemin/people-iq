@@ -2,25 +2,21 @@ import React, { Component } from 'react';
 import find from 'lodash/find';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { blueA400, blueA700, lightGreenA400, lightGreenA700 } from 'material-ui/styles/colors';
 import { getUserProfile, initLock, showLock } from '../libs/auth0.js';
 import { createProfile, getProfiles, login } from '../libs/scaphold.js';
 import Header from '../components/layout/header.jsx';
 import ProgressBar from '../components/shared/progress-bar.jsx';
 import CardsList from '../components/cards-list.jsx';
+import EditProfile from '../components/edit-profile.jsx';
 
 let userId = null;
 const userAgent = typeof navigator === 'undefined' ? 'all' : navigator.userAgent;
 const muiTheme = getMuiTheme(
   {
     palette: {
-      primary1Color: blueA400,
-      primary2Color: blueA700,
-      // primary3Color: grey400,
-      accent1Color: lightGreenA700,
-      accent2Color: lightGreenA400,
-      // accent3Color: grey500,
-      pickerHeaderColor: blueA400
+      primary1Color: '#07b4c8',
+      primary2Color: '#78c7d1',
+      accent1Color: '#361e5c',
     }
   },
   { userAgent }
@@ -30,6 +26,7 @@ class App extends Component {
   state = {
     user: null,
     profiles: null,
+    view: 'list', // list or edit
     userProfile: null
   };
 
@@ -39,7 +36,7 @@ class App extends Component {
       .then(login)
       .then(this.setUser)
       .then(getProfiles)
-      .then(this.createProfile)
+      .then(this.createUserProfile)
       .then(this.setProfiles)
       .catch((msg, error) => {
         if (msg || error) console.error(msg, error);
@@ -61,7 +58,11 @@ class App extends Component {
     return profiles;
   };
 
-  createProfile = (profiles) => {
+  changeView = (view) => {
+    this.setState({ view });
+  };
+
+  createUserProfile = (profiles) => {
     const userProfile = find(profiles, p => p.user.id === userId);
 
     if (userProfile) return this.setUserProfile(userProfile, profiles);
@@ -70,16 +71,30 @@ class App extends Component {
       .then(profile => this.setUserProfile(profile, profiles));
   };
 
+  saveProfile = (profile) => {
+    console.log('save', profile);
+  };
+
+  toggleView = () => {
+    if (this.state.view === 'list') this.setState({ view: 'edit' });
+    else this.setState({ view: 'list' });
+  };
+
   render() {
-    const { user, profiles, userProfile } = this.state;
+    const { user, profiles, userProfile, view } = this.state;
+    let content = <CardsList profiles={profiles} />;
+
+    if (view === 'edit') {
+      content = <EditProfile profile={userProfile} save={this.saveProfile} cancel={this.toggleView} />;
+    }
 
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
           <ProgressBar isLoading={!profiles} />
-          <Header user={user} profile={userProfile} />
+          <Header changeView={this.changeView} user={user} profile={userProfile} />
           <main className="container">
-            <CardsList profiles={profiles} userProfile={userProfile} />
+            {content}
           </main>
         </div>
       </MuiThemeProvider>
