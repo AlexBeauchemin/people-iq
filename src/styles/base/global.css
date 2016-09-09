@@ -27,11 +27,6 @@ ul {
   li { margin: 0 0 5px 0; }
 }
 
-.container {
-  padding: 1em 2em;
-  width: 100%;
-}
-
 h1 {
   font-size: 50px;
   margin: 0;
@@ -52,4 +47,15 @@ a {
 
 .l-box {
   padding: 1em;
+}
+
+.container {
+  padding: 1em 1em;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 1em 2em;
+  }
 }

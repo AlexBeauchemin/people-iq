@@ -2,8 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import Dropzone from 'react-dropzone';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import Divider from 'material-ui/Divider';
+import Paper from 'material-ui/Paper';
 
 const styles = {
+  button: {
+    height: '60px',
+    lineHeight: '60px'
+  },
   container: {
     margin: '0 auto',
     maxWidth: '600px',
@@ -56,8 +62,8 @@ class EditProfile extends Component {
     const { description, email, location, mobile, name, phone, picture, title } = profile;
 
     return (
-      <div style={styles.container}>
-        <div className="pure-g">
+      <Paper style={styles.container}>
+        <div className="pure-g" style={{ padding: '1em 2em 2em 2em' }}>
           <div className="pure-u-1-1 pure-u-sm-1-3">
             <Dropzone onDrop={this.handleDrop} multiple={false} accept="image/*" style={styles.dropzone}>
               <img src={picture} role="presentation" style={styles.img} />
@@ -118,11 +124,12 @@ class EditProfile extends Component {
             />
           </div>
         </div>
-        <div className="text-right" style={{ marginTop: '20px' }}>
-          <FlatButton label="Cancel" onClick={cancel} />
-          <FlatButton label="Save" onClick={this.save} primary />
+        <Divider />
+        <div className="text-right">
+          <FlatButton label="Cancel" onClick={cancel} labelStyle={styles.button} style={styles.button} />
+          <FlatButton label="Save" onClick={this.save} labelStyle={styles.button} style={styles.button} primary />
         </div>
-      </div>
+      </Paper>
     );
   }
 }

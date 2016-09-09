@@ -7,6 +7,14 @@ import { showLock } from '../../libs/auth0.js';
 const styles = {
   img: {
     height: '60px'
+  },
+  searchInput: {
+    paddingRight: '30px'
+  },
+  searchButton: {
+    position: 'absolute',
+    right: '-20px',
+    top: 0
   }
 };
 
@@ -47,14 +55,16 @@ class Header extends Component {
     return (
       <header className="container">
         <div className="pure-g">
-          <div className="pure-u-1-2">
+          <div className="pure-u-1-1 pure-u-md-1-4">
             <a href="#" onClick={this.goToHome}>
               <img src="http://sweetiq.com/wp-content/themes/sweetiq/img/logos/SWIQ_Logo_Open_Grey.png" alt="PeopleIQ" style={styles.img} />
             </a>
           </div>
-          <div className="pure-u-1-2 text-right">
-            <FlatButton icon={<FontIcon className="fa fa-search" />} />
-            <TextField hintText="Search" />
+          <div className="pure-u-1-1 pure-u-md-1-2" style={{ marginTop: '10px', position: 'relative' }}>
+            <FlatButton icon={<FontIcon className="fa fa-search" />} style={styles.searchButton} />
+            <TextField hintText="Search" style={styles.searchInput} fullWidth />
+          </div>
+          <div className="pure-u-1-1 pure-u-md-1-4 text-right">
             {menu}
           </div>
         </div>
