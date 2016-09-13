@@ -6,6 +6,8 @@ function uploadFile(signedUrl, file) {
   const method = 'PUT';
   const body = new FormData();
   const headers = { 'Content-Type': file.type };
+  
+  console.log(file.type);
 
   body.append('file', file);
 
@@ -26,7 +28,8 @@ function getSignedUrl(filename, filetype) {
     .then(parseJSON);
 }
 
-export default function uploadToS3(file) {
-  return getSignedUrl(file.name, file.type)
-    .then((data) => uploadFile(data.url, file));
+export default function uploadToS3(file, name) {
+  const filename = name || file.name;
+  return getSignedUrl(filename, file.type)
+    .then(data => uploadFile(data.url, file));
 }

@@ -1,9 +1,14 @@
 import React, { Component, PropTypes } from 'react';
+import getSlug from 'speakingurl';
 import Dropzone from 'react-dropzone';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
+import Snackbar from 'material-ui/Snackbar';
+import s3Upload from '../libs/s3-upload';
+
+const MAX_IMG_SIZE = 1000 * 1000; // bytes : 1mb
 
 const styles = {
   button: {
@@ -33,18 +38,66 @@ const styles = {
 
 class EditProfile extends Component {
   constructor(props) {
+
     super(props);
-    this.state = Object.assign({}, props.profile);
+
+    this.timer = undefined;
+    this.state = {
+      profile: Object.assign({}, props.profile),
+      previewImage: null,
+      snackBarOpen: false,
+      snackBarMessage: ''
+    };
   }
 
   handleChange = (e) => {
-    const prop = {};
-    prop[e.target.id] = e.target.value;
-    this.setState(prop);
+    const { profile } = this.state;
+    const updatedProfile = Object.assign({}, profile);
+
+    updatedProfile[e.target.id] = e.target.value;
+
+    this.setState({ profile: updatedProfile });
   };
 
   handleDrop = (files) => {
-    console.log('Received files: ', files);
+    const { profile } = this.props;
+    const file = files[0];
+  
+    if (file.size >= MAX_IMG_SIZE) {
+      this.handleError('File size is too big, please keep it under 1mb');
+      return;
+    }
+
+    const fileExtension = file.name.split('.').pop();
+    const name = getSlug(profile.email.split('@')[0]);
+    const filename = `${name}.${fileExtension}`;
+  
+    this.setState({ previewImage: file.preview });
+  
+    return s3Upload(file, filename)
+      .then((data) => {
+        const picture =  data.url.split('?')[0];
+        const updatedProfile = Object.assign({}, this.state.profile);
+
+        profile.picture = picture;
+
+        this.setState({
+          profile: updatedProfile,
+          previewImage: null
+        });
+      });
+  };
+
+  componentWillUnMount() {
+    if (this.timer) clearTimeout(this.timer);
+  }
+
+  handleError = (snackBarMessage) => {
+    this.setState({ snackBarOpen: true, snackBarMessage });
+  };
+
+  handleSnackBarClose = () => {
+    this.setState({ snackBarOpen: false });
   };
 
   save = () => {
@@ -59,6 +112,7 @@ class EditProfile extends Component {
 
   render() {
     const { cancel, profile } = this.props;
+    const { snackBarOpen, snackBarMessage } = this.state;
     const { description, email, location, mobile, name, phone, picture, title } = profile;
 
     return (
@@ -90,6 +144,7 @@ class EditProfile extends Component {
               defaultValue={email}
               floatingLabelText="Email"
               onChange={this.handleChange}
+              disabled
               fullWidth
             />
             <TextField
@@ -129,6 +184,12 @@ class EditProfile extends Component {
           <FlatButton label="Cancel" onClick={cancel} labelStyle={styles.button} style={styles.button} />
           <FlatButton label="Save" onClick={this.save} labelStyle={styles.button} style={styles.button} primary />
         </div>
+        <Snackbar
+          open={snackBarOpen}
+          message={snackBarMessage}
+          autoHideDuration={3000}
+          onRequestClose={this.handleSnackBarClose}
+        />
       </Paper>
     );
   }

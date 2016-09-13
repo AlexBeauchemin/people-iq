@@ -4,7 +4,7 @@
   "description": "",
   "author": "Alex Beauchemin",
   "scripts": {
-    "start": "cross-env NODE_PATH=. NODE_ENV=dev concurrently --kill-others \"nodemon server.js\" \"node webpack.server.js\"",
+    "start": "cross-env NODE_PATH=. NODE_ENV=dev concurrently --kill-others \"nodemon src/server/index.js\" \"node webpack.server.js\"",
     "webpack": "webpack",
     "build": "rimraf dist/ && npm run webpack",
     "postinstall": "npm run build"
@@ -19,6 +19,11 @@
     "auth0-lock-passwordless": "^2.2.3",
     "aws-sdk": "^2.4.9",
     "babel-polyfill": "^6.9.1",
+    "babel-register": "^6.14.0",
+    "body-parser": "^1.15.2",
+    "compression": "^1.6.2",
+    "ejs": "^2.5.2",
+    "express": "^4.14.0",
     "lodash": "^4.13.1",
     "material-ui": "^0.15.4",
     "purecss": "^0.6.0",
@@ -27,6 +32,8 @@
     "react-dom": "^15.2.1",
     "react-dropzone": "^3.6.0",
     "react-tap-event-plugin": "^1.0.0",
+    "serve-favicon": "^2.3.0",
+    "speakingurl": "^9.0.0",
     "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
