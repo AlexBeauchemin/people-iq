@@ -85,7 +85,14 @@ if (DEBUG) {
   config.module.loaders[0].loaders = ['babel'];
   config.module.loaders[1] = {
     test: /\.css$/,
-    loader: ExtractTextPlugin.extract({ style: 'style-loader', css: 'css-loader!postcss-loader', loader: 'css-loader?sourceMap', notExtractLoader: 'style-loader' })
+    loader: ExtractTextPlugin.extract({
+      fallbackLoader: 'style-loader',
+      // style: 'style-loader',
+      // css: 'css-loader!postcss-loader',
+      // loader: 'css-loader?sourceMap',
+      // notExtractLoader: 'style-loader'
+      loader: ['css', 'postcss']
+    })
   };
 }
 

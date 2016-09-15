@@ -64,7 +64,7 @@ class EditProfile extends Component {
     const file = files[0];
   
     if (file.size >= MAX_IMG_SIZE) {
-      this.handleError('File size is too big, please keep it under 1mb');
+      this.handleError('File size is too big. Please keep it under 1mb, I\'m too lazy to optimize them.');
       return;
     }
 
@@ -102,12 +102,11 @@ class EditProfile extends Component {
 
   save = () => {
     const { save } = this.props;
-    const profile = Object.assign({}, this.state);
+    const state = Object.assign({}, this.state);
 
-    delete profile.id;
-    delete profile.user;
+    delete state.profile.user;
 
-    save(profile);
+    save(state.profile);
   };
 
   render() {
@@ -187,7 +186,7 @@ class EditProfile extends Component {
         <Snackbar
           open={snackBarOpen}
           message={snackBarMessage}
-          autoHideDuration={3000}
+          autoHideDuration={5000}
           onRequestClose={this.handleSnackBarClose}
         />
       </Paper>

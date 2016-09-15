@@ -3,7 +3,7 @@ import find from 'lodash/find';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { getUserProfile, initLock, showLock } from '../libs/auth0.js';
-import { createProfile, getProfiles, login } from '../libs/scaphold.js';
+import { createProfile, getProfiles, login, updateProfile } from '../libs/scaphold.js';
 import Header from '../components/layout/header.jsx';
 import ProgressBar from '../components/shared/progress-bar.jsx';
 import CardsList from '../components/cards-list.jsx';
@@ -72,7 +72,12 @@ class App extends Component {
   };
 
   saveProfile = (profile) => {
-    console.log('save', profile);
+    updateProfile(profile)
+      .then((res) => {
+        if (res && res.errors) return res.errors.forEach(err => console.error(err.message));
+        console.log('saved!', res);
+      })
+      .catch(console.error);
   };
 
   toggleView = () => {

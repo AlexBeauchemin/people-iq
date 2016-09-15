@@ -4,12 +4,8 @@ function parseJSON(response) {
 
 function uploadFile(signedUrl, file) {
   const method = 'PUT';
-  const body = new FormData();
+  const body = file;
   const headers = { 'Content-Type': file.type };
-  
-  console.log(file.type);
-
-  body.append('file', file);
 
   return fetch(signedUrl, { body, headers, method });
 }
@@ -19,7 +15,8 @@ function getSignedUrl(filename, filetype) {
     method: 'POST',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-amz-acl': 'public-read'
     },
     body: JSON.stringify({ filename, filetype })
   };

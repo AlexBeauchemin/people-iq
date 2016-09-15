@@ -149,3 +149,37 @@ export function login(profile) {
 
   return getAuth(identity, token);
 }
+
+export function updateProfile(profile) {
+  const data = {
+    query: `mutation UpdateProfile($profile: _UpdateProfileInput!) { 
+              updateProfile(input: $profile) { 
+                changedProfile { 
+                  email,
+                  id,
+                  location,
+                  name,
+                  picture, 
+                  title,  
+                }
+              }
+            }`,
+    variables: JSON.stringify({ profile })
+  };
+
+  return new Promise((resolve, reject) => {
+    const options = {
+      body: JSON.stringify(data),
+      headers: new Headers({
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      }),
+      method: 'post'
+    };
+
+    fetch(config.scaphold.url, options)
+      .then(response => { return response.json(); })
+      .then(resolve)
+      .catch(reject);
+  });
+}
