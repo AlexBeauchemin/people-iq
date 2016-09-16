@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import find from 'lodash/find';
+import map from 'lodash/map';
+import holmes from 'holmes.js';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { getUserProfile, initLock, showLock } from '../libs/auth0.js';
@@ -16,7 +18,7 @@ const muiTheme = getMuiTheme(
     palette: {
       primary1Color: '#07b4c8',
       primary2Color: '#78c7d1',
-      accent1Color: '#361e5c',
+      accent1Color: '#361e5c'
     }
   },
   { userAgent }
@@ -24,10 +26,11 @@ const muiTheme = getMuiTheme(
 
 class App extends Component {
   state = {
-    user: null,
     profiles: null,
-    view: 'list', // list or edit
-    userProfile: null
+    search: '',
+    user: null,
+    userProfile: null,
+    view: 'list' // list or edit
   };
 
   componentWillMount() {
@@ -38,6 +41,7 @@ class App extends Component {
       .then(getProfiles)
       .then(this.createUserProfile)
       .then(this.setProfiles)
+      .then(this.initHolmes)
       .catch((msg, error) => {
         if (msg || error) console.error(msg, error);
         showLock();
@@ -58,6 +62,18 @@ class App extends Component {
     return profiles;
   };
 
+  afterUpdate = (res, updatedProfile) => {
+    if (res && res.errors) return res.errors.forEach(err => { console.error(err.message); });
+
+    const userProfile = Object.assign({}, this.state.userProfile, updatedProfile);
+    const profiles = map(this.state.profiles, profile => {
+      if (profile.id === updatedProfile.id) return Object.assign({}, profile, updatedProfile);
+      return profile;
+    });
+
+    this.setState({ profiles, userProfile, view: 'list' });
+  };
+
   changeView = (view) => {
     this.setState({ view });
   };
@@ -71,12 +87,13 @@ class App extends Component {
       .then(profile => this.setUserProfile(profile, profiles));
   };
 
+  handleSearch = (val) => {
+    this.setState({ search: val });
+  };
+
   saveProfile = (profile) => {
     updateProfile(profile)
-      .then((res) => {
-        if (res && res.errors) return res.errors.forEach(err => console.error(err.message));
-        console.log('saved!', res);
-      })
+      .then(res => this.afterUpdate(res, profile))
       .catch(console.error);
   };
 
@@ -86,8 +103,8 @@ class App extends Component {
   };
 
   render() {
-    const { user, profiles, userProfile, view } = this.state;
-    let content = <CardsList profiles={profiles} />;
+    const { profiles, search, user, userProfile, view } = this.state;
+    let content = <CardsList profiles={profiles} search={search} />;
 
     if (view === 'edit') {
       content = <EditProfile profile={userProfile} save={this.saveProfile} cancel={this.toggleView} />;
@@ -97,7 +114,7 @@ class App extends Component {
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
           <ProgressBar isLoading={!profiles} />
-          <Header changeView={this.changeView} user={user} profile={userProfile} />
+          <Header changeView={this.changeView} search={this.handleSearch} user={user} profile={userProfile} />
           <main className="container">
             {content}
           </main>

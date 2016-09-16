@@ -24,6 +24,12 @@ function logout() {
 }
 
 class Header extends Component {
+  handleSearch = (e) => {
+    let val = e.target.value;
+    if (val.length <= 2) val = '';
+    this.props.search(val);
+  }
+
   goToEdit = () => {
     this.props.changeView('edit');
   };
@@ -62,7 +68,7 @@ class Header extends Component {
           </div>
           <div className="pure-u-1-1 pure-u-md-1-2" style={{ marginTop: '10px', position: 'relative' }}>
             <FlatButton icon={<FontIcon className="fa fa-search" />} style={styles.searchButton} />
-            <TextField hintText="Search" style={styles.searchInput} fullWidth />
+            <TextField hintText="Search" type="search" style={styles.searchInput} onChange={this.handleSearch} fullWidth />
           </div>
           <div className="pure-u-1-1 pure-u-md-1-4 text-right">
             {menu}
@@ -76,6 +82,7 @@ class Header extends Component {
 Header.propTypes = {
   changeView: PropTypes.func.isRequired,
   profile: PropTypes.object,
+  search: PropTypes.func.isRequired,
   user: PropTypes.object
 };
 

@@ -20,19 +20,29 @@ const styles = {
   }
 };
 
-const ProfileCard = ({ profile }) => {
+const ProfileCard = ({ profile, search }) => {
   const { description, email, location, mobile, name, phone, picture, title } = profile;
   const styleImg = assign({ backgroundImage: `url(${picture})` }, styles.image);
   let elDescription = null;
   let elPhone = null;
   let elMobile = null;
+  let visibleClass = 'hidden';
 
   if (description) elDescription = <p>{description}</p>;
   if (mobile) elMobile = <div><FontIcon style={styles.icon} className="fa fa-mobile" />{mobile}</div>;
   if (phone) elPhone = <div><FontIcon style={styles.icon} className="fa fa-phone" />{phone}</div>;
 
+  if (!search) visibleClass = '';
+  else {
+    const searchValue = search.toLowerCase();
+    if (email && email.toLowerCase().indexOf(searchValue) > -1) visibleClass = '';
+    if (name && name.toLowerCase().indexOf(searchValue) > -1) visibleClass = '';
+    if (title && title.toLowerCase().indexOf(searchValue) > -1) visibleClass = '';
+    if (location && location.toLowerCase().indexOf(searchValue) > -1) visibleClass = '';
+  }
+
   return (
-    <div className="pure-u-1-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-5" style={styles.card}>
+    <div className={`${visibleClass} pure-u-1-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-5`} style={styles.card}>
       <Card>
         <CardMedia>
           <div style={styleImg}></div>
@@ -51,7 +61,8 @@ const ProfileCard = ({ profile }) => {
 };
 
 ProfileCard.prototype.propTypes = {
-  profiles: PropTypes.array.isRequired
+  profile: PropTypes.array.isRequired,
+  search: PropTypes.string
 };
 
 export default ProfileCard;

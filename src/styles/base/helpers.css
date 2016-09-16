@@ -15,3 +15,4 @@
 .flex-container { display: flex; }
 .flex-fill { flex-grow: 1; }
 .flex { flex: 0 1 auto; }
+.hidden { display: none; }

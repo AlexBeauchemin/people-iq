@@ -43,6 +43,7 @@ class EditProfile extends Component {
 
     this.timer = undefined;
     this.state = {
+      cacheBuster: 0, // used to force rerender of the dom because the image url stay the same event when updated
       profile: Object.assign({}, props.profile),
       previewImage: null,
       snackBarOpen: false,
@@ -73,18 +74,21 @@ class EditProfile extends Component {
     const filename = `${name}.${fileExtension}`;
   
     this.setState({ previewImage: file.preview });
-  
+
     return s3Upload(file, filename)
       .then((data) => {
         const picture =  data.url.split('?')[0];
         const updatedProfile = Object.assign({}, this.state.profile);
 
-        profile.picture = picture;
+        updatedProfile.picture = picture;
 
         this.setState({
+          cacheBuster: this.state.cacheBuster + 1,
           profile: updatedProfile,
           previewImage: null
         });
+
+        this.forceUpdate();
       });
   };
 
@@ -111,15 +115,19 @@ class EditProfile extends Component {
 
   render() {
     const { cancel, profile } = this.props;
-    const { snackBarOpen, snackBarMessage } = this.state;
+    const { cacheBuster, previewImage, snackBarOpen, snackBarMessage } = this.state;
     const { description, email, location, mobile, name, phone, picture, title } = profile;
+    let profilePicture = picture;
 
+    if (this.state.profile.picture) profilePicture = `${this.state.profile.picture}?v=${cacheBuster}`;
+    if (previewImage) profilePicture = previewImage;
+    
     return (
       <Paper style={styles.container}>
         <div className="pure-g" style={{ padding: '1em 2em 2em 2em' }}>
           <div className="pure-u-1-1 pure-u-sm-1-3">
             <Dropzone onDrop={this.handleDrop} multiple={false} accept="image/*" style={styles.dropzone}>
-              <img src={picture} role="presentation" style={styles.img} />
+              <img src={profilePicture} role="presentation" style={styles.img} />
               <div style={styles.dropzoneText}>Drop a new picture here, or click to select a file to upload.</div>
             </Dropzone>
           </div>
