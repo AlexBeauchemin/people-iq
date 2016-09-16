@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_PATH=. NODE_ENV=dev concurrently --kill-others \"nodemon src/server/index.js\" \"node webpack.server.js\"",
     "webpack": "webpack",
-    "build": "rimraf dist/ && NODE_ENV=production npm run webpack",
+    "build": "rimraf dist/ && copy src/index.html docs/ && NODE_ENV=production npm run webpack",
     "postinstall": "npm run build"
   },
   "engines": {
@@ -43,6 +43,7 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-2": "^6.13.0",
     "concurrently": "^2.2.0",
+    "copy": "^0.3.0",
     "cross-env": "^1.0.8",
     "css-loader": "^0.25.0",
     "eslint": "^2.11.1",
