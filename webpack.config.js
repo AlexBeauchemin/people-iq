@@ -22,7 +22,8 @@ const config = {
     modules: [__dirname, 'node_modules']
   },
   output: {
-    filename: DEBUG ? 'app.js' : 'app.[chunkhash].js',
+    // filename: DEBUG ? 'app.js' : 'app.[chunkhash].js',
+    filename: 'app.js',
     path: path.join(__dirname, 'dist')
   },
   plugins: [

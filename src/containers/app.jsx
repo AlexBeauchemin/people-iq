@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import find from 'lodash/find';
 import map from 'lodash/map';
-import holmes from 'holmes.js';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { getUserProfile, initLock, showLock } from '../libs/auth0.js';

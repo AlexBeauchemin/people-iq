@@ -1,5 +1,4 @@
 .idea
 node_modules
-dist
 src/config/aws.json
 src/config/config.js
