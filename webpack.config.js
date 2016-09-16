@@ -24,7 +24,7 @@ const config = {
   output: {
     // filename: DEBUG ? 'app.js' : 'app.[chunkhash].js',
     filename: 'app.js',
-    path: path.join(__dirname, 'dist')
+    path: path.join(__dirname, 'docs')
   },
   plugins: [
     new webpack.DefinePlugin({
