@@ -63,7 +63,7 @@ class Header extends Component {
         <div className="pure-g">
           <div className="pure-u-1-1 pure-u-md-1-4">
             <a href="#" onClick={this.goToHome}>
-              <img src="http://sweetiq.com/wp-content/themes/sweetiq/img/logos/SWIQ_Logo_Open_Grey.png" alt="PeopleIQ" style={styles.img} />
+              <img src="images/sweetiq.png" alt="PeopleIQ" style={styles.img} />
             </a>
           </div>
           <div className="pure-u-1-1 pure-u-md-1-2" style={{ marginTop: '10px', position: 'relative' }}>
