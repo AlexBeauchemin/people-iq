@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_PATH=. NODE_ENV=dev concurrently --kill-others \"nodemon src/server/index.js\" \"node webpack.server.js\"",
     "webpack": "webpack",
-    "build": "rimraf dist/ && copy src/index.html docs/ && NODE_ENV=production npm run webpack",
+    "build": "rimraf docs/ && node scripts/copy.js && NODE_ENV=production npm run webpack",
     "postinstall": "npm run build"
   },
   "engines": {
