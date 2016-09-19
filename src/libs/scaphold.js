@@ -6,6 +6,12 @@ let authProfile = null;
 
 function cleanUpProfilesObject(profiles) {
   const results = get(profiles, 'data.viewer.allProfiles.edges') || [];
+
+  if (profiles.errors) {
+    console.error(profiles.errors);
+    throw new Error(profiles.errors);
+  }
+
   return map(results, result => result.node);
 }
 
@@ -95,7 +101,7 @@ export function getProfiles() {
     query: `
       {
         viewer {
-          allProfiles {
+          allProfiles(first: 500, orderBy: "name") {
             edges {
               node {
                 id
@@ -107,6 +113,8 @@ export function getProfiles() {
                 picture,
                 description,
                 location,
+                birthDate,
+                hireDate,
                 user {
                   id,
                   username,

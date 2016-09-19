@@ -9,3 +9,6 @@
 
 /* Vendors */
 @import "vendor/purecss-extend.css";
+
+/* Components */
+@import "components/header.css";

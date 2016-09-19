@@ -1,0 +1,14 @@
+header {
+  @media (max-width: 767px) {
+    .menu {
+      position: absolute;
+      top: 10px;
+      right: 0;
+
+      button {
+        height: 16px !important;
+        line-height: 16px !important;
+      }
+    }
+  }
+}

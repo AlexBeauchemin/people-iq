@@ -6,6 +6,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
 import Snackbar from 'material-ui/Snackbar';
+import DatePicker from 'material-ui/DatePicker';
 import s3Upload from '../libs/s3-upload';
 
 const MAX_IMG_SIZE = 1000 * 1000; // bytes : 1mb
@@ -38,7 +39,6 @@ const styles = {
 
 class EditProfile extends Component {
   constructor(props) {
-
     super(props);
 
     this.timer = undefined;
@@ -54,8 +54,19 @@ class EditProfile extends Component {
   handleChange = (e) => {
     const { profile } = this.state;
     const updatedProfile = Object.assign({}, profile);
+    const field = e.target.id;
+    const value = e.target.value;
 
-    updatedProfile[e.target.id] = e.target.value;
+    updatedProfile[field] = value;
+
+    this.setState({ profile: updatedProfile });
+  };
+
+  handleDateChange = (field, value) => {
+    const { profile } = this.state;
+    const updatedProfile = Object.assign({}, profile);
+
+    updatedProfile[field] = value;
 
     this.setState({ profile: updatedProfile });
   };
@@ -63,7 +74,7 @@ class EditProfile extends Component {
   handleDrop = (files) => {
     const { profile } = this.props;
     const file = files[0];
-  
+
     if (file.size >= MAX_IMG_SIZE) {
       this.handleError('File size is too big. Please keep it under 1mb, I\'m too lazy to optimize them.');
       return;
@@ -72,12 +83,12 @@ class EditProfile extends Component {
     const fileExtension = file.name.split('.').pop();
     const name = getSlug(profile.email.split('@')[0]);
     const filename = `${name}.${fileExtension}`;
-  
+
     this.setState({ previewImage: file.preview });
 
     return s3Upload(file, filename)
       .then((data) => {
-        const picture =  data.url.split('?')[0];
+        const picture = data.url.split('?')[0];
         const updatedProfile = Object.assign({}, this.state.profile);
 
         updatedProfile.picture = picture;
@@ -116,12 +127,12 @@ class EditProfile extends Component {
   render() {
     const { cancel, profile } = this.props;
     const { cacheBuster, previewImage, snackBarOpen, snackBarMessage } = this.state;
-    const { description, email, location, mobile, name, phone, picture, title } = profile;
+    const { birthDate, description, email, location, mobile, hireDate, name, phone, picture, title } = profile;
     let profilePicture = picture;
 
     if (this.state.profile.picture) profilePicture = `${this.state.profile.picture}?v=${cacheBuster}`;
     if (previewImage) profilePicture = previewImage;
-    
+
     return (
       <Paper style={styles.container}>
         <div className="pure-g" style={{ padding: '1em 2em 2em 2em' }}>
@@ -173,6 +184,22 @@ class EditProfile extends Component {
               defaultValue={location}
               floatingLabelText="Location"
               onChange={this.handleChange}
+              fullWidth
+            />
+            <DatePicker
+              id="birthDate"
+              defaultValue={birthDate}
+              floatingLabelText="Birth Date"
+              onChange={(e, date) => { this.handleDateChange('hireDate', date); }}
+              autoOk
+              fullWidth
+            />
+            <DatePicker
+              id="hireDate"
+              defaultValue={hireDate}
+              floatingLabelText="Hire Date"
+              onChange={(e, date) => { this.handleDateChange('hireDate', date); }}
+              autoOk
               fullWidth
             />
             <TextField

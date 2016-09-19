@@ -28,7 +28,7 @@ class Header extends Component {
     let val = e.target.value;
     if (val.length <= 2) val = '';
     this.props.search(val);
-  }
+  };
 
   goToEdit = () => {
     this.props.changeView('edit');
@@ -39,14 +39,26 @@ class Header extends Component {
   };
 
   render() {
-    const { user } = this.props;
+    const { page, user } = this.props;
     const isLogged = !!user;
+    let elEdit = <FlatButton label="Edit Profile" onClick={this.goToEdit} />;
     let menu;
+    let elSearch;
+
+    if (page === 'edit') elEdit = null;
+    else {
+      elSearch = (
+        <div>
+          <FlatButton icon={<FontIcon className="fa fa-search" />} style={styles.searchButton} />
+          <TextField hintText="Search" type="search" style={styles.searchInput} onChange={this.handleSearch} fullWidth />
+        </div>
+      );
+    }
 
     if (isLogged) {
       menu = (
         <div style={{ display: 'inline-block' }}>
-          <FlatButton label="Edit Profile" onClick={this.goToEdit} />
+          {elEdit}
           <FlatButton label="Logout" onClick={logout} />
         </div>
       );
@@ -61,16 +73,15 @@ class Header extends Component {
     return (
       <header className="container">
         <div className="pure-g">
-          <div className="pure-u-1-1 pure-u-md-1-4">
+          <div className="pure-u-1-2 pure-u-md-1-4">
             <a href="#" onClick={this.goToHome}>
               <img src="images/sweetiq.png" alt="PeopleIQ" style={styles.img} />
             </a>
           </div>
           <div className="pure-u-1-1 pure-u-md-1-2" style={{ marginTop: '10px', position: 'relative' }}>
-            <FlatButton icon={<FontIcon className="fa fa-search" />} style={styles.searchButton} />
-            <TextField hintText="Search" type="search" style={styles.searchInput} onChange={this.handleSearch} fullWidth />
+            {elSearch}
           </div>
-          <div className="pure-u-1-1 pure-u-md-1-4 text-right">
+          <div className="pure-u-1-2 pure-u-md-1-4 text-right menu">
             {menu}
           </div>
         </div>
@@ -81,6 +92,7 @@ class Header extends Component {
 
 Header.propTypes = {
   changeView: PropTypes.func.isRequired,
+  page: PropTypes.string,
   profile: PropTypes.object,
   search: PropTypes.func.isRequired,
   user: PropTypes.object

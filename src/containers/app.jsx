@@ -12,6 +12,7 @@ import EditProfile from '../components/edit-profile.jsx';
 
 let userId = null;
 const userAgent = typeof navigator === 'undefined' ? 'all' : navigator.userAgent;
+const defaultView = localStorage.getItem('defaultView') || 'list';
 const muiTheme = getMuiTheme(
   {
     palette: {
@@ -29,10 +30,14 @@ class App extends Component {
     search: '',
     user: null,
     userProfile: null,
-    view: 'list' // list or edit
+    view: defaultView // list or edit
   };
 
   componentWillMount() {
+    if (localStorage.getItem('defaultView')) {
+      localStorage.removeItem('defaultView');
+    }
+
     initLock();
     getUserProfile()
       .then(login)
@@ -40,7 +45,6 @@ class App extends Component {
       .then(getProfiles)
       .then(this.createUserProfile)
       .then(this.setProfiles)
-      .then(this.initHolmes)
       .catch((msg, error) => {
         if (msg || error) console.error(msg, error);
         showLock();
@@ -83,7 +87,10 @@ class App extends Component {
     if (userProfile) return this.setUserProfile(userProfile, profiles);
 
     return createProfile(userId)
-      .then(profile => this.setUserProfile(profile, profiles));
+      .then(() => {
+        localStorage.setItem('defaultView', 'edit');
+        document.location.href = '/';
+      });
   };
 
   handleSearch = (val) => {
@@ -105,7 +112,7 @@ class App extends Component {
     const { profiles, search, user, userProfile, view } = this.state;
     let content = <CardsList profiles={profiles} search={search} />;
 
-    if (view === 'edit') {
+    if (view === 'edit' && userProfile) {
       content = <EditProfile profile={userProfile} save={this.saveProfile} cancel={this.toggleView} />;
     }
 
@@ -113,7 +120,7 @@ class App extends Component {
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
           <ProgressBar isLoading={!profiles} />
-          <Header changeView={this.changeView} search={this.handleSearch} user={user} profile={userProfile} />
+          <Header changeView={this.changeView} search={this.handleSearch} user={user} profile={userProfile} page={this.state.view} />
           <main className="container">
             {content}
           </main>
